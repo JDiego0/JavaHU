@@ -1,5 +1,7 @@
 package com.corporate.talenthub;
 
+import java.math.BigDecimal;
+
 public class Main {
     public static void main(String[] args) {
 
@@ -13,34 +15,35 @@ public class Main {
 
         System.out.println(encabezado);
 
-        //crear objeto empleado
+        // crear objeto empleado (usando encapsulamiento)
         Empleado emp = new Empleado();
-        emp.idEmpleado = 2;
-        emp.salarioBase = 2000000L;
-        emp.bonoMensual = 200000f;
-        emp.nombre = "Juan";
-        emp.esActivo = true;
+        emp.setIdEmpleado(2);
+        emp.setSalarioBase(2000000L);
+        emp.setBonoMensual(new BigDecimal("200000"));
+        emp.setNombre("Juan");
+        emp.setActivo(true);
 
-        //crear record
-        EmpresaRecord empresa = new EmpresaRecord("TechCorp","123456",2010);
+        // crear record
+        EmpresaRecord empresa = new EmpresaRecord("TechCorp", "123456", 2010);
         System.out.println(empresa);
 
-        //servicio
+        // servicio
         EmpleadoService service = new EmpleadoService();
 
-        //salario
-        double salarioFinal =  service.calcularSalarioFinal(emp);
+        // salario
+        BigDecimal salarioFinal = service.calcularSalarioFinal(emp);
         System.out.println("Salario final: " + salarioFinal);
 
-        //par o impar
+        // par o impar
         System.out.println("¿ID es par?: " + service.esIdPar(emp));
 
-        //Elegibilidad
-        boolean elegible = service.validarElegibilidad(90,25,1,false);
-        System.out.println("Elegible: "+ elegible);
+        // elegibilidad
+        boolean elegible = service.validarElegibilidad(90, 25, 1, false);
+        System.out.println("Elegible: " + elegible);
 
-        //Null test
-        emp.nombre = null;
+        // Null test
+        emp.setNombre(null);
+
         /*
         Java 8:
         NullPointerException genérico
@@ -49,11 +52,18 @@ public class Main {
         Indica exactamente qué variable es null
         */
 
-        //comparacion de objetos
-        Empleado emp2 =  new Empleado();
+        // Forzamos el error para evidenciar el mensaje moderno
+        try {
+            System.out.println(emp.getNombre().length());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        // comparación de objetos
+        Empleado emp2 = new Empleado();
 
         System.out.println(emp == emp2);
-        //false porque son referencias distintas en memoria
+        // false porque son referencias distintas en memoria
         // == compara referencias en memoria (Heap), no el contenido del objeto
     }
 }
