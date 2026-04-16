@@ -5,10 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cda8f246-f7bc-4c73-9046-6d29c2b5a49b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/models/Employee.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/repositories/EmployeeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Developer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Employee.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/ExternConsultant.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Manager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/ManagerLegacy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/PerformanceReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/PerformanceReportPOJO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Person.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/PersonLegacy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Promotional.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/riwi/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/riwi/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/riwi/models/Employee.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/riwi/repositories/EmployeeRepository.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,7 +28,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Record" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -39,9 +51,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
+    "Application.TestPromotional.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feature/HU3",
+    "git-widget-placeholder": "feature/HU4",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/juang/Desktop/JavaHU",
