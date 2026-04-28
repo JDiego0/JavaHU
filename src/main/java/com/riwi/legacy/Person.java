@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 /**
  * Sealed classes offer greater API design security compared to open inheritance because:

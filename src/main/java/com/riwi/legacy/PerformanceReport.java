@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 public record PerformanceReport(int idEmployee , double average, String feedback) {
     // Custom constructor for validation

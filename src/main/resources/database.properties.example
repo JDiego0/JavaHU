@@ -1,0 +1,18 @@
+# Database Configuration Properties
+# Copy this file to database.properties and update with your actual values
+# DO NOT commit the actual database.properties file to version control
+
+# Database URL
+# For local MySQL:
+# db.url=jdbc:mysql://localhost:3306/java_hu_db
+# For cloud MySQL with SSL:
+# db.url=jdbc:mysql://your-host:3306/your-db?sslMode=REQUIRED
+db.url=jdbc:mysql://localhost:3306/java_hu_db
+
+# Database credentials
+db.username=your_username
+db.password=your_password
+
+# Connection pool settings (optional)
+db.connectionTimeout=30000
+db.maxPoolSize=10

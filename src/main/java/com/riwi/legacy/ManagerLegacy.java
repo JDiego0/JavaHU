@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 /**
  * Example demonstrating open inheritance - any class can extend PersonLegacy

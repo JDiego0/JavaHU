@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 /**
  * Traditional abstract class with open inheritance (Legacy Style - Java 8/11)

@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 public interface Promotional {
     double calculatePromotionBonus();

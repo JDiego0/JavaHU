@@ -1,4 +1,4 @@
-package com.riwi;
+package com.riwi.legacy;
 
 public final class Developer extends Person implements Promotional {
     private String mainlanguage;
