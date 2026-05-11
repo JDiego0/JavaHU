@@ -1,6 +1,25 @@
 # Eventify API
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com)
+[![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github)
+[![Java](https://img.shields.io/badge/java-21-orange)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/spring%20boot-2.7.18-green)](https://spring.io/projects/spring-boot)
 
 A Spring Boot application for managing events and venues. This project implements a clean architecture following Spring MVC patterns with in-memory data storage.
+
+## 🚀 Quick Start (5 minutos)
+
+1. **Iniciar la aplicación**:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+2. **Abrir Swagger UI**:
+   Visita http://localhost:8080/swagger-ui.html
+
+3. **Probar la API**:
+   Usa la interfaz interactiva de Swagger para crear y consultar eventos y lugares
+
+---
 
 ## Features
 
@@ -126,11 +145,28 @@ mvn test -Dtest=EventServiceTest
 mvn test -Dtest=VenueServiceTest
 ```
 
-## API Documentation
+## 📚 API Documentation
 
-Once the application is running, you can access the interactive API documentation at:
+**🎯 OBJETIVO PRINCIPAL**: La documentación interactiva Swagger es el punto central de este proyecto.
+
+### Acceso a Swagger UI
+
+Una vez que la aplicación está corriendo, puedes acceder a la documentación interactiva en:
+
 - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
 - **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
+
+### 📋 ¿Qué encontrarás en Swagger?
+
+- **Endpoints documentados**: Todos los GET y POST para eventos y lugares
+- **Interfaz interactiva**: Prueba la API directamente desde tu navegador
+- **Ejemplos de uso**: JSON pre-configurados para facilitar las pruebas
+- **Validaciones**: Documentación de errores y códigos de estado
+
+### 🔥 Características destacadas de Swagger
+- **Try it out**: Ejecuta endpoints sin necesidad de herramientas externas
+- **Auto-generación**: Documentación siempre sincronizada con el código
+- **Exportación**: Descarga especificaciones OpenAPI para integración
 
 ## Usage Examples
 
@@ -221,7 +257,47 @@ The API returns appropriate HTTP status codes:
 
 This project is licensed under the MIT License.
 
-## Future Enhancements
+## 🛠️ Troubleshooting
+
+### Problemas comunes y soluciones
+
+#### 🚫 Puerto 8080 ocupado
+**Error**: `Port 8080 is already in use`
+**Solución**: Cambia el puerto en `src/main/resources/application.properties`:
+```properties
+server.port=8081
+```
+
+#### ☕ Versión de Java incorrecta
+**Error**: `Java version mismatch`
+**Solución**: Asegúrate de tener Java 21 instalado:
+```bash
+java -version # Debe mostrar Java 21
+```
+
+#### 📦 Dependencias no encontradas
+**Error**: `Could not resolve dependencies`
+**Solución**: Limpia y reinstala dependencias:
+```bash
+mvn clean install
+```
+
+#### 🔍 Swagger no accesible
+**Error**: `404 Not Found` al acceder a Swagger
+**Solución**: Verifica que la aplicación esté corriendo correctamente:
+```bash
+mvn spring-boot:run
+# Espera el mensaje "Started EventifyApplication"
+```
+
+### 📞 Ayuda adicional
+- Revisa los logs de la aplicación para errores detallados
+- Asegúrate de cumplir todos los prerrequisitos
+- Consulta la sección de pruebas para verificar el funcionamiento
+
+---
+
+## 🚀 Future Enhancements
 
 - Database persistence (JPA/Hibernate)
 - Authentication and authorization

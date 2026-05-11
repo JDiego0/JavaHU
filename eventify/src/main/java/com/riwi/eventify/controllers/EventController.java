@@ -17,9 +17,9 @@ import java.util.List;
 @RequestMapping("/api/events")
 @Tag(name = "Eventos", description = "Operaciones relacionadas con la gestión de eventos")
 public class EventController {
-    
+
     private final EventService eventService;
-    
+
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }

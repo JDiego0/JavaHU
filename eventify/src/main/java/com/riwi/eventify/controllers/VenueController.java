@@ -17,9 +17,9 @@ import java.util.List;
 @RequestMapping("/api/venues")
 @Tag(name = "Lugares", description = "Operaciones relacionadas con la gestión de lugares")
 public class VenueController {
-    
+
     private final VenueService venueService;
-    
+
     public VenueController(VenueService venueService) {
         this.venueService = venueService;
     }
