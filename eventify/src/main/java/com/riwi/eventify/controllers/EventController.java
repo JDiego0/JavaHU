@@ -7,6 +7,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +29,20 @@ public class EventController {
     }
     
     @GetMapping
-    @Operation(summary = "Obtener todos los eventos", description = "Retorna una lista con todos los eventos registrados")
+    @Operation(summary = "Obtener todos los eventos", description = "Retorna una lista paginada con todos los eventos registrados. Soporta parámetros: page, size, sort")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de eventos obtenida exitosamente"),
         @ApiResponse(responseCode = "204", description = "No hay eventos registrados")
     })
-    public ResponseEntity<List<Event>> getAllEvents() {
-        List<Event> events = eventService.getAllEvents();
+    public ResponseEntity<Page<Event>> getAllEvents(
+            @Parameter(description = "Número de página (default: 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamaño de página (default: 10)") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Campo de ordenamiento (default: id)") @RequestParam(defaultValue = "id") String sort,
+            @Parameter(description = "Dirección de ordenamiento (default: asc)") @RequestParam(defaultValue = "asc") String direction) {
+        
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<Event> events = eventService.getAllEvents(pageable);
         return ResponseEntity.ok(events);
     }
     
@@ -69,7 +80,31 @@ public class EventController {
         @ApiResponse(responseCode = "404", description = "Evento no encontrado")
     })
     public ResponseEntity<Void> deleteEvent(@Parameter(description = "ID del evento a eliminar") @PathVariable Long id) {
-        eventService.deleteEvent(id);
-        return ResponseEntity.noContent().build();
+        try {
+            eventService.deleteEvent(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar evento", description = "Actualiza un evento existente por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Evento actualizado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o incompletos"),
+        @ApiResponse(responseCode = "404", description = "Evento no encontrado")
+    })
+    public ResponseEntity<Event> updateEvent(
+            @Parameter(description = "ID del evento a actualizar") @PathVariable Long id,
+            @RequestBody Event event) {
+        try {
+            Event updatedEvent = eventService.updateEvent(id, event);
+            return ResponseEntity.ok(updatedEvent);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

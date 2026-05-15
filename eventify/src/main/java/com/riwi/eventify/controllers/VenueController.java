@@ -7,6 +7,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +29,20 @@ public class VenueController {
     }
     
     @GetMapping
-    @Operation(summary = "Obtener todos los lugares", description = "Retorna una lista con todos los lugares registrados")
+    @Operation(summary = "Obtener todos los lugares", description = "Retorna una lista paginada con todos los lugares registrados. Soporta parámetros: page, size, sort")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Lista de lugares obtenida exitosamente"),
         @ApiResponse(responseCode = "204", description = "No hay lugares registrados")
     })
-    public ResponseEntity<List<Venue>> getAllVenues() {
-        List<Venue> venues = venueService.getAllVenues();
+    public ResponseEntity<Page<Venue>> getAllVenues(
+            @Parameter(description = "Número de página (default: 0)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamaño de página (default: 10)") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Campo de ordenamiento (default: id)") @RequestParam(defaultValue = "id") String sort,
+            @Parameter(description = "Dirección de ordenamiento (default: asc)") @RequestParam(defaultValue = "asc") String direction) {
+        
+        Sort.Direction sortDirection = direction.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sort));
+        Page<Venue> venues = venueService.getAllVenues(pageable);
         return ResponseEntity.ok(venues);
     }
     
@@ -69,7 +80,31 @@ public class VenueController {
         @ApiResponse(responseCode = "404", description = "Lugar no encontrado")
     })
     public ResponseEntity<Void> deleteVenue(@Parameter(description = "ID del lugar a eliminar") @PathVariable Long id) {
-        venueService.deleteVenue(id);
-        return ResponseEntity.noContent().build();
+        try {
+            venueService.deleteVenue(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar lugar", description = "Actualiza un lugar existente por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lugar actualizado exitosamente"),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o incompletos"),
+        @ApiResponse(responseCode = "404", description = "Lugar no encontrado")
+    })
+    public ResponseEntity<Venue> updateVenue(
+            @Parameter(description = "ID del lugar a actualizar") @PathVariable Long id,
+            @RequestBody Venue venue) {
+        try {
+            Venue updatedVenue = venueService.updateVenue(id, venue);
+            return ResponseEntity.ok(updatedVenue);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

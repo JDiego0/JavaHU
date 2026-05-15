@@ -157,10 +157,63 @@ class EventServiceTest {
 
     @Test
     void deleteEvent_ValidId_ShouldCallRepository() {
+        // Given
+        when(eventRepository.existsById(1L)).thenReturn(true);
+
         // When
         eventService.deleteEvent(1L);
 
         // Then
+        verify(eventRepository, times(1)).existsById(1L);
         verify(eventRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteEvent_NonExistingId_ShouldThrowRuntimeException() {
+        // Given
+        when(eventRepository.existsById(999L)).thenReturn(false);
+
+        // When & Then
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> eventService.deleteEvent(999L)
+        );
+        assertEquals("Evento no encontrado con ID: 999", exception.getMessage());
+        verify(eventRepository, times(1)).existsById(999L);
+        verify(eventRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void updateEvent_ValidId_ShouldReturnUpdatedEvent() {
+        // Given
+        Event existingEvent = new Event(1L, "Evento Antiguo", "Descripción", testDate, "Lugar");
+        Event updatedEvent = new Event(1L, "Evento Actualizado", "Nueva Descripción", testDate, "Nuevo Lugar");
+        when(eventRepository.existsById(1L)).thenReturn(true);
+        when(eventRepository.save(any(Event.class))).thenReturn(updatedEvent);
+
+        // When
+        Event result = eventService.updateEvent(1L, updatedEvent);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Evento Actualizado", result.getName());
+        verify(eventRepository, times(1)).existsById(1L);
+        verify(eventRepository, times(1)).save(any(Event.class));
+    }
+
+    @Test
+    void updateEvent_NonExistingId_ShouldThrowRuntimeException() {
+        // Given
+        Event updatedEvent = new Event(1L, "Evento Actualizado", "Nueva Descripción", testDate, "Nuevo Lugar");
+        when(eventRepository.existsById(999L)).thenReturn(false);
+
+        // When & Then
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> eventService.updateEvent(999L, updatedEvent)
+        );
+        assertEquals("Evento no encontrado con ID: 999", exception.getMessage());
+        verify(eventRepository, times(1)).existsById(999L);
+        verify(eventRepository, never()).save(any());
     }
 }

@@ -197,10 +197,63 @@ class VenueServiceTest {
 
     @Test
     void deleteVenue_ValidId_ShouldCallRepository() {
+        // Given
+        when(venueRepository.existsById(1L)).thenReturn(true);
+
         // When
         venueService.deleteVenue(1L);
 
         // Then
+        verify(venueRepository, times(1)).existsById(1L);
         verify(venueRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteVenue_NonExistingId_ShouldThrowRuntimeException() {
+        // Given
+        when(venueRepository.existsById(999L)).thenReturn(false);
+
+        // When & Then
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> venueService.deleteVenue(999L)
+        );
+        assertEquals("Lugar no encontrado con ID: 999", exception.getMessage());
+        verify(venueRepository, times(1)).existsById(999L);
+        verify(venueRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void updateVenue_ValidId_ShouldReturnUpdatedVenue() {
+        // Given
+        Venue existingVenue = new Venue(1L, "Estadio Antiguo", "Dirección Antigua", 1000);
+        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000);
+        when(venueRepository.existsById(1L)).thenReturn(true);
+        when(venueRepository.save(any(Venue.class))).thenReturn(updatedVenue);
+
+        // When
+        Venue result = venueService.updateVenue(1L, updatedVenue);
+
+        // Then
+        assertNotNull(result);
+        assertEquals("Estadio Actualizado", result.getName());
+        verify(venueRepository, times(1)).existsById(1L);
+        verify(venueRepository, times(1)).save(any(Venue.class));
+    }
+
+    @Test
+    void updateVenue_NonExistingId_ShouldThrowRuntimeException() {
+        // Given
+        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000);
+        when(venueRepository.existsById(999L)).thenReturn(false);
+
+        // When & Then
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> venueService.updateVenue(999L, updatedVenue)
+        );
+        assertEquals("Lugar no encontrado con ID: 999", exception.getMessage());
+        verify(venueRepository, times(1)).existsById(999L);
+        verify(venueRepository, never()).save(any());
     }
 }

@@ -2,6 +2,8 @@ package com.riwi.eventify.services;
 
 import com.riwi.eventify.models.Event;
 import com.riwi.eventify.repositories.EventRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,12 +26,28 @@ public class EventService {
         return eventRepository.findAll();
     }
 
+    public Page<Event> getAllEvents(Pageable pageable) {
+        return eventRepository.findAll(pageable);
+    }
+
     public Optional<Event> getEventById(Long id) {
         return eventRepository.findById(id);
     }
 
     public void deleteEvent(Long id) {
+        if (!eventRepository.existsById(id)) {
+            throw new RuntimeException("Evento no encontrado con ID: " + id);
+        }
         eventRepository.deleteById(id);
+    }
+
+    public Event updateEvent(Long id, Event event) {
+        if (!eventRepository.existsById(id)) {
+            throw new RuntimeException("Evento no encontrado con ID: " + id);
+        }
+        validateEvent(event);
+        event.setId(id);
+        return eventRepository.save(event);
     }
 
     private void validateEvent(Event event) {
