@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventify - Formulario de Lugar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .has-error input {
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${venue.id != null ? '✏️ Editar Lugar' : '➕ Nuevo Lugar'}">Nuevo Lugar</h1>
+        
+        <form th:action="@{/admin/venues/save}" th:object="${venue}" method="post">
+            <input type="hidden" th:field="*{id}" th:if="${venue.id != null}" />
+            
+            <div class="form-group">
+                <label for="name">Nombre del Lugar *</label>
+                <input type="text" id="name" th:field="*{name}" required maxlength="100" placeholder="Ej: Centro de Convenciones" />
+                <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Nombre es requerido</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Dirección *</label>
+                <input type="text" id="address" th:field="*{address}" required maxlength="200" placeholder="Ej: Av. Principal 123" />
+                <div class="error-message" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Dirección es requerida</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="capacity">Capacidad *</label>
+                <input type="number" id="capacity" th:field="*{capacity}" required min="1" placeholder="Ej: 500" />
+                <div class="error-message" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}">Capacidad es requerida</div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 Guardar</button>
+                <a href="/admin/venues" class="btn btn-secondary">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

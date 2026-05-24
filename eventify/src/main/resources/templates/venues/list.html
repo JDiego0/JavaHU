@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventify - Catálogo de Lugares</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .nav-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+        }
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 Catálogo de Lugares</h1>
+        
+        <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+        
+        <div class="nav-buttons">
+            <a href="/admin/venues/new" class="btn btn-primary">➕ Nuevo Lugar</a>
+            <a href="/admin/events" class="btn btn-secondary">📅 Gestionar Eventos</a>
+        </div>
+        
+        <div th:if="${venues == null or #lists.isEmpty(venues)}" class="empty-message">
+            <p>📭 No hay lugares registrados en el catálogo.</p>
+            <p style="margin-top: 10px;">Comienza agregando tu primer lugar.</p>
+        </div>
+        
+        <table th:if="${venues != null and not #lists.isEmpty(venues)}">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Capacidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="venue : ${venues}">
+                    <td th:text="${venue.id}">1</td>
+                    <td th:text="${venue.name}">Lugar de ejemplo</td>
+                    <td th:text="${venue.address}">Dirección del lugar</td>
+                    <td th:text="${venue.capacity}">100</td>
+                    <td class="actions">
+                        <a th:href="@{/admin/venues/edit/{id}(id=${venue.id})}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">✏️ Editar</a>
+                        <form th:action="@{/admin/venues/delete/{id}(id=${venue.id})}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;" onclick="return confirm('¿Estás seguro de eliminar este lugar?');">🗑️ Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
