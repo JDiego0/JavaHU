@@ -60,5 +60,8 @@ public class VenueService {
         if (venue.getCapacity() == null || venue.getCapacity() <= 0) {
             throw new IllegalArgumentException("La capacidad del lugar debe ser mayor a cero");
         }
+        if (venue.getCity() == null || venue.getCity().trim().isEmpty()) {
+            throw new IllegalArgumentException("La ciudad del lugar es obligatoria");
+        }
     }
 }

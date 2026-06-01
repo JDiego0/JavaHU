@@ -1,7 +1,10 @@
 package com.riwi.eventify.controllers;
 
+import com.riwi.eventify.dto.EventSummaryDTO;
+import com.riwi.eventify.models.Category;
 import com.riwi.eventify.models.Event;
 import com.riwi.eventify.models.Venue;
+import com.riwi.eventify.services.CategoryService;
 import com.riwi.eventify.services.EventService;
 import com.riwi.eventify.services.VenueService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,14 +12,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,47 +40,42 @@ public class EventViewControllerTest {
     @MockBean
     private VenueService venueService;
 
+    @MockBean
+    private CategoryService categoryService;
+
     private Event testEvent;
     private Venue testVenue;
 
     @BeforeEach
     void setUp() {
+        testVenue = new Venue("Lugar de prueba", "Direccion de prueba", 100, "Lima");
+        testVenue.setId(1L);
         testEvent = new Event();
         testEvent.setId(1L);
         testEvent.setName("Evento de prueba");
         testEvent.setDescription("Descripción de prueba");
         testEvent.setDate(LocalDateTime.now().plusDays(1));
-        testEvent.setVenue("Lugar de prueba");
-        testVenue = new Venue(1L, "Lugar de prueba", "Direccion de prueba", 100);
+        testEvent.setVenue(testVenue);
+        testEvent.setActive(true);
+        testEvent.setCategories(new HashSet<>());
         when(venueService.getAllVenues()).thenReturn(Arrays.asList(testVenue));
+        when(categoryService.getAllCategories()).thenReturn(Collections.emptyList());
     }
 
     @Test
     void testListEvents_ReturnsViewWithEvents() throws Exception {
-        List<Event> events = Arrays.asList(testEvent);
-        when(eventService.getAllEvents()).thenReturn(events);
+        var eventsSlice = new SliceImpl<>(Arrays.asList(
+                new EventSummaryDTO(1L, "Evento de prueba", testEvent.getDate(), "Lugar de prueba", "Lima")
+        ));
+        when(eventService.searchEventsForAdmin(any(), any(), any(Pageable.class))).thenReturn(eventsSlice);
 
         mockMvc.perform(get("/admin/events"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("events/list"))
                 .andExpect(model().attributeExists("events"))
-                .andExpect(model().attribute("events", events));
+                .andExpect(model().attributeExists("eventsPage"));
 
-        verify(eventService, times(1)).getAllEvents();
-    }
-
-    @Test
-    void testListEvents_WithSuccessMessage() throws Exception {
-        List<Event> events = Arrays.asList(testEvent);
-        when(eventService.getAllEvents()).thenReturn(events);
-
-        mockMvc.perform(get("/admin/events")
-                        .param("success", "Evento creado exitosamente"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("events/list"))
-                .andExpect(model().attributeExists("events"))
-                .andExpect(model().attributeExists("successMessage"))
-                .andExpect(model().attribute("successMessage", "Evento creado exitosamente"));
+        verify(eventService, times(1)).searchEventsForAdmin(any(), any(), any(Pageable.class));
     }
 
     @Test
@@ -116,7 +118,7 @@ public class EventViewControllerTest {
                         .param("name", "Nuevo evento")
                         .param("description", "Descripción")
                         .param("date", LocalDateTime.now().plusDays(1).toString())
-                        .param("venue", "Lugar"))
+                        .param("venue.id", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/events"));
 
@@ -132,7 +134,7 @@ public class EventViewControllerTest {
                         .param("name", "Evento actualizado")
                         .param("description", "Descripción actualizada")
                         .param("date", LocalDateTime.now().plusDays(1).toString())
-                        .param("venue", "Lugar"))
+                        .param("venue.id", "1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/events"));
 

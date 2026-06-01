@@ -35,6 +35,7 @@ public class VenueViewControllerTest {
         testVenue.setId(1L);
         testVenue.setName("Lugar de prueba");
         testVenue.setAddress("Dirección de prueba");
+        testVenue.setCity("Lima");
         testVenue.setCapacity(100);
     }
 
@@ -105,6 +106,7 @@ public class VenueViewControllerTest {
         mockMvc.perform(post("/admin/venues/save")
                         .param("name", "Nuevo lugar")
                         .param("address", "Dirección")
+                        .param("city", "Lima")
                         .param("capacity", "50"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/venues"));
@@ -120,6 +122,7 @@ public class VenueViewControllerTest {
                         .param("id", "1")
                         .param("name", "Lugar actualizado")
                         .param("address", "Dirección actualizada")
+                        .param("city", "Callao")
                         .param("capacity", "150"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/venues"));

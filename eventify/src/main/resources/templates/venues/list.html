@@ -126,6 +126,7 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Dirección</th>
+                    <th>Ciudad</th>
                     <th>Capacidad</th>
                     <th>Acciones</th>
                 </tr>
@@ -135,6 +136,7 @@
                     <td th:text="${venue.id}">1</td>
                     <td th:text="${venue.name}">Lugar de ejemplo</td>
                     <td th:text="${venue.address}">Dirección del lugar</td>
+                    <td th:text="${venue.city}">Ciudad</td>
                     <td th:text="${venue.capacity}">100</td>
                     <td class="actions">
                         <a th:href="@{/admin/venues/edit/{id}(id=${venue.id})}" class="btn btn-primary" style="padding: 5px 10px; font-size: 12px;">✏️ Editar</a>

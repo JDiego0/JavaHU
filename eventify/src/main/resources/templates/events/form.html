@@ -114,6 +114,36 @@
         .has-error select {
             border-color: #dc3545;
         }
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .category-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .category-checkbox:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        .category-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+        }
+        .category-checkbox label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
     </style>
 </head>
 <body>
@@ -144,12 +174,12 @@
             </div>
             
             <div class="form-group">
-                <label for="venue">Lugar *</label>
-                <select id="venue" th:field="*{venue}" required th:disabled="${venues == null or #lists.isEmpty(venues)}">
+                <label for="venue.id">Lugar *</label>
+                <select id="venue.id" th:field="*{venue.id}" required th:disabled="${venues == null or #lists.isEmpty(venues)}">
                     <option value="">Seleccione un lugar</option>
                     <option th:each="venueItem : ${venues}"
-                            th:value="${venueItem.name}"
-                            th:text="${venueItem.name + ' - Capacidad: ' + venueItem.capacity}">
+                            th:value="${venueItem.id}"
+                            th:text="${venueItem.name + ' (' + venueItem.city + ') - Capacidad: ' + venueItem.capacity}">
                         Centro de Convenciones - Capacidad: 500
                     </option>
                 </select>
@@ -157,6 +187,23 @@
                     No hay lugares registrados. Registre un lugar antes de crear eventos.
                 </div>
                 <div class="error-message" th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">Lugar es requerido</div>
+            </div>
+
+            <div class="form-group">
+                <label>Categorías</label>
+                <div class="categories-grid">
+                    <div th:each="cat : ${allCategories}" class="category-checkbox">
+                        <input type="checkbox" 
+                               name="categoryIds" 
+                               th:value="${cat.id}" 
+                               th:id="${'cat-' + cat.id}"
+                               th:checked="${event.categories != null and #sets.contains(event.categories, cat)}" />
+                        <label th:for="${'cat-' + cat.id}" th:text="${cat.name}">Categoría</label>
+                    </div>
+                </div>
+                <div th:if="${allCategories == null or #lists.isEmpty(allCategories)}" class="empty-venues">
+                    No hay categorías registradas.
+                </div>
             </div>
             
             <div class="form-actions">

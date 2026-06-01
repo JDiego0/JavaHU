@@ -30,9 +30,9 @@ class VenueRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        venue1 = new Venue("Centro de Convenciones", "Av. Principal 123", 5000);
-        venue2 = new Venue("Estadio Nacional", "Calle Deportiva 456", 50000);
-        venue3 = new Venue("Sala de Conferencias", "Plaza Central 789", 200);
+        venue1 = new Venue("Centro de Convenciones", "Av. Principal 123", 5000, "Lima");
+        venue2 = new Venue("Estadio Nacional", "Calle Deportiva 456", 50000, "Lima");
+        venue3 = new Venue("Sala de Conferencias", "Plaza Central 789", 200, "Callao");
     }
 
     @Test

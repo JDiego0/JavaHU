@@ -109,6 +109,12 @@
                 <input type="text" id="address" th:field="*{address}" required maxlength="200" placeholder="Ej: Av. Principal 123" />
                 <div class="error-message" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Dirección es requerida</div>
             </div>
+
+            <div class="form-group">
+                <label for="city">Ciudad *</label>
+                <input type="text" id="city" th:field="*{city}" required maxlength="100" placeholder="Ej: Bogotá" />
+                <div class="error-message" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Ciudad es requerida</div>
+            </div>
             
             <div class="form-group">
                 <label for="capacity">Capacidad *</label>

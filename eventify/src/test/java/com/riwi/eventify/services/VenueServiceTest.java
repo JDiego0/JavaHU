@@ -30,13 +30,13 @@ class VenueServiceTest {
 
     @BeforeEach
     void setUp() {
-        testVenue = new Venue("Estadio Nacional", "Av. Principal 123", 50000);
+        testVenue = new Venue("Estadio Nacional", "Av. Principal 123", 50000, "Lima");
     }
 
     @Test
     void createVenue_ValidVenue_ShouldReturnSavedVenue() {
         // Given
-        Venue savedVenue = new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000);
+        Venue savedVenue = new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000, "Lima");
         when(venueRepository.save(any(Venue.class))).thenReturn(savedVenue);
 
         // When
@@ -152,8 +152,8 @@ class VenueServiceTest {
     void getAllVenues_ShouldReturnAllVenues() {
         // Given
         List<Venue> venues = Arrays.asList(
-                new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000),
-                new Venue(2L, "Teatro Municipal", "Calle Cultura 456", 800)
+                new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000, "Lima"),
+                new Venue(2L, "Teatro Municipal", "Calle Cultura 456", 800, "Lima")
         );
         when(venueRepository.findAll()).thenReturn(venues);
 
@@ -170,7 +170,7 @@ class VenueServiceTest {
     @Test
     void getVenueById_ExistingId_ShouldReturnVenue() {
         // Given
-        Venue venue = new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000);
+        Venue venue = new Venue(1L, "Estadio Nacional", "Av. Principal 123", 50000, "Lima");
         when(venueRepository.findById(1L)).thenReturn(Optional.of(venue));
 
         // When
@@ -226,8 +226,7 @@ class VenueServiceTest {
     @Test
     void updateVenue_ValidId_ShouldReturnUpdatedVenue() {
         // Given
-        Venue existingVenue = new Venue(1L, "Estadio Antiguo", "Dirección Antigua", 1000);
-        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000);
+        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000, "Callao");
         when(venueRepository.existsById(1L)).thenReturn(true);
         when(venueRepository.save(any(Venue.class))).thenReturn(updatedVenue);
 
@@ -244,7 +243,7 @@ class VenueServiceTest {
     @Test
     void updateVenue_NonExistingId_ShouldThrowRuntimeException() {
         // Given
-        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000);
+        Venue updatedVenue = new Venue(1L, "Estadio Actualizado", "Nueva Dirección", 2000, "Callao");
         when(venueRepository.existsById(999L)).thenReturn(false);
 
         // When & Then
